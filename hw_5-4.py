@@ -28,11 +28,11 @@ def input_error_change(func):
         try:
             return func(*args, **kwargs)
         except ValueError:
-            return "Give me name please."
+            return "Give me name and phone please."
         except KeyError:
-            return "Give me name please."
+            return "Give me name and phone please."
         except IndexError:
-            return "Give me name please."
+            return "Give me name and phone please."
     return inner
 
 def parse_input(user_input):
