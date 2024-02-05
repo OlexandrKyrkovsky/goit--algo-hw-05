@@ -12,11 +12,8 @@ def generator_numbers(text: str):
         num=float(num)
         yield num
 
-for num in generator_numbers(text):
-    print(num)
-
 def sum_profit(text: str, generator_numbers: Callable):
-    total_income=sum(generator_numbers)
+    total_income=sum(generator_numbers(text))
     return total_income
 
 total_income = sum_profit(text, generator_numbers)
