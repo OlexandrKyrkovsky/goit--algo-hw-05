@@ -1,64 +1,48 @@
-def input_error_add(func):
+def input_error(func):
     def inner(*args, **kwargs):
         try:
             return func(*args, **kwargs)
         except ValueError:
             return "Give me name and phone please."
         except KeyError:
-            return "Give me name and phone please."
+            return "No such name found"
         except IndexError:
-            return "Give me name and phone please."
-
+            return "Not found"
+        except Exception as e:
+            return f"Error: {e}"
     return inner
 
-def input_error_phone(func):
-    def inner(*args, **kwargs):
-        try:
-            return func(*args, **kwargs)
-        except ValueError:
-            return "Give me name please."
-        except KeyError:
-            return "Give me name please."
-        except IndexError:
-            return "Give me name please."
-    return inner
-
-def input_error_change(func):
-    def inner(*args, **kwargs):
-        try:
-            return func(*args, **kwargs)
-        except ValueError:
-            return "Give me name and phone please."
-        except KeyError:
-            return "Give me name and phone please."
-        except IndexError:
-            return "Give me name and phone please."
-    return inner
-
+@input_error
 def parse_input(user_input):
     cmd, *args = user_input.split()
     cmd = cmd.strip().lower()
     return cmd, *args
     
-@input_error_add
+@input_error
 def add_contact(args, contacts):
     name, phone = args
     contacts[name] = phone
     return "Contact added."
 
-@input_error_change
+@input_error
 def change_contact(args, contacts):
-    name, phone = args
-    contacts[name] = phone
-    return "Contact updated."
+    if args[0] in contacts.keys():
+        add_contact(args, contacts)
+        return 'Contact changed'
+    else:
+        raise(KeyError)
 
-@input_error_phone
+
+@input_error
 def show_phone(args, contacts):
-    name=args[0]
-    if name in contacts:
-        return contacts[name]
-    return 'Not found'
+    return contacts[args[0]]
 
+@input_error
+def show_all(args,contacts):
+    s=''
+    for key in contacts:
+        s+=(f"{key:10} : {contacts[key]}\n")
+    return s
 
 def main():
     contacts = {}
@@ -77,9 +61,9 @@ def main():
         elif command == "change":
             print(change_contact(args, contacts))
         elif command == "phone":
-            print(show_phone(args, contacts))
+            print(show_phone(args,contacts))
         elif command == "all":
-            print(contacts) 
+            print(show_all(args,contacts))
         else:
             print("Invalid command.")
 
